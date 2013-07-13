@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         browserify: {
             'build/scripts/game.js': ['public/javascripts/game.coffee'],
             options: {
-                transform: ['coffeeify', 'deamdify'],
+                transform: ['coffeeify'],
                 alias: ['public/javascripts/vendor/crafty:crafty']
             }
         },

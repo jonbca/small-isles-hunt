@@ -1343,11 +1343,13 @@
 
     initComponents(Crafty, window, window.document);
 
-    //make Crafty global
-    window.Crafty = Crafty;
-
-    if (typeof define === 'function') {
+    // export Crafty
+    if (typeof define === 'function') { // AMD
         define('crafty', [], function() { return Crafty; });
+    } else if (typeof exports === 'object') { // CommonJS
+        module.exports = Crafty;
+    } else { // browser global
+        window.Crafty = Crafty;
     }
 })(window,
 
