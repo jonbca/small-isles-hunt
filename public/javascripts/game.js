@@ -1,14 +1,14 @@
 exports.startGame = function(Crafty) {
-    Crafty.init(1440, 900);
+    Crafty.init(640, 480);
     
     const TYPE_TARGET = "target";
     
     const map_grid = {
-        width: 16,
-        height: 11,
+        width: 32,
+        height: 24,
         tile: {
-            width: 80,
-            height: 80
+            width: 40,
+            height: 40
         }
     };
 
@@ -103,13 +103,13 @@ exports.startGame = function(Crafty) {
 
         Crafty.e("2D, Net, Grid")
             .setName("Target")
-            .at(1, 1)
+            .at(10, 10)
             .define("CLIENT", function () {
                 this.addComponent("DOM, Color")
                     .color("rgb(255,0,0)")
                     .netBind("Moved", function (newPos) {
                         console.log(newPos);
-                        this.at(Math.floor(newPos.x / map_grid.tile.width), Math.floor(newPos.y / map_grid.tile.height));
+                        this.at(Math.round(newPos.x / map_grid.tile.width), Math.round(newPos.y / map_grid.tile.height));
                     });
             })
             .define("CLIENT2", function () {
@@ -148,8 +148,7 @@ if (typeof require === 'undefined') {
                 watcher = document.getElementById('WATCHING'),
                 clickHandler = function (clientId) {
                     return function () {
-                        var buttons = document.getElementById('buttons');
-                        buttons.parentNode.removeChild(buttons);
+                        document.getElementById('buttons').remove();
                         exports.setupDefault(function() { //immediate callback after Crafty with Crafty.net is available
                                 //create Crafty Client
                                 Crafty = exports.createClient(clientId);
@@ -166,8 +165,8 @@ if (typeof require === 'undefined') {
 
             shooter.addEventListener('click', clickHandler('CLIENT1'));
             targeter.addEventListener('click', clickHandler('CLIENT2'));
-            watcher.addEventListener('click', clickHandler('CLIENT3'));
-            // watcher.addEventListener('touchend', clickHandler('CLIENT3'));
+            watcher.addEventListener('click', clickHandler('WATCHING'));
+            watcher.addEventListener('touchend', clickHandler('WATCHING'));
         }
     ); 
 }
