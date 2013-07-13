@@ -100,6 +100,7 @@ if (typeof require === 'undefined') {
         function () {
             var shooter = document.getElementById('CLIENT1'),
                 targeter = document.getElementById('CLIENT2'),
+                watcher = document.getElementById('WATCHING'),
                 clickHandler = function (clientId) {
                     return function () {
                         document.getElementById('buttons').remove();
@@ -119,6 +120,7 @@ if (typeof require === 'undefined') {
 
             shooter.addEventListener('click', clickHandler('CLIENT1'));
             targeter.addEventListener('click', clickHandler('CLIENT2'));
+            watcher.addEventListener('click', clickHandler('WATCHING'));
         }
     ); 
 }
