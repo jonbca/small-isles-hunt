@@ -12,7 +12,6 @@ module.exports = function (grunt) {
             'build/scripts/game.js': ['public/javascripts/game.coffee'],
             options: {
                 transform: ['coffeeify'],
-                alias: ['public/javascripts/vendor/crafty:crafty'],
                 aliasMappings: [
                     {
                         cwd: 'public/javascripts',

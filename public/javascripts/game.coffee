@@ -1,18 +1,13 @@
-Crafty = require 'crafty'
-Bird = require 'bird'
+npm_crafty = window.npm_crafty
 
-width = window.innerWidth
-height = window.innerHeight
+window.onload = ->
+    npm_crafty.setupDefault ->
+        Crafty = npm_crafty.createClient("CLIENT");
 
-Game =
-    width: window.innerWidth
-    
-    height: window.innerHeight
-
-    start: ->
-        Crafty.init width, height
-        Crafty.background 'rgb(138,194,255)'
-
-module.exports = Game
-
-global.addEventListener 'load', Game.start
+        Crafty.netBind("CustomEvent", (data) ->
+            console.log("1. Client receive event");
+            Crafty.netTrigger("CustomEvent", data);
+        )
+    , (socket) ->
+        npm_crafty.setServer(Crafty, socket);
+    , (socket) ->
