@@ -1,5 +1,5 @@
 exports.startGame = function(Crafty) {
-    Crafty.init(600, 300);
+    Crafty.init(640, 480);
     
     const TYPE_BORDER = "border";
     const TYPE_SCORE = "score";
