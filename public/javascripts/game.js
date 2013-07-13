@@ -1,28 +1,39 @@
 exports.startGame = function(Crafty) {
     Crafty.init(640, 480);
     
-    const TYPE_BORDER = "border";
-    const TYPE_SCORE = "score";
-    const TYPE_PADDLE = "paddle";
-    const TYPE_BALL = "ball";
+    const TYPE_TARGET = "target";
     
-    const EVENT_LEFT_HIT = "leftScoreBoardHit";
-    const EVENT_RIGHT_HIT = "rightScoreBoardHit";
-    
-    Crafty.c("Collidable", {
-        init: function(entity) {
+    const map_grid = {
+        width: 32,
+        height: 24,
+        tile: {
+            width: 40,
+            height: 40
+        }
+    };
+
+    var width = function width() {
+        return map_grid.width * map_grid.tile.width;
+    },
+    height = function height() {
+        return map_grid.height * map_grid.tile.height;
+    }
+
+    Crafty.c("Grid", {
+        init: function () {
+            this.attr({
+                w: map_grid.tile.width,
+                h: map_grid.tile.height
+            })
         },
-        collidable: function(type, callback) {
-            this._collideCallback = callback;
-            this._type = type;
-            return this;
-        },
-        collide: function(collider) {
-            if (this._collideCallback)
-                this._collideCallback(collider);
-        },
-        getType: function() {
-            return this._type;
+
+        at: function (x, y) {
+            if (x === undefined && y === undefined) {
+                return { x: this.x/map_grid.tile.width, y: this.y/map_grid.tile.height }
+            } else {
+                this.attr({ x: x * map_grid.tile.width, y: y * map_grid.tile.height });
+                return this;
+            }
         }
     });
     
@@ -46,7 +57,7 @@ exports.startGame = function(Crafty) {
     });
     
     
-    Crafty.c("ServerPaddle", {
+    Crafty.c("Target", {
         init: function(entity) {
             this
             .netBind("KeyDown", function(e) {
@@ -89,6 +100,40 @@ exports.startGame = function(Crafty) {
         Crafty.define("CLIENT", function() {
             this.background('rgb(138,194,255)');
         });
+
+        Crafty.e("2D, Net, Grid")
+            .setName("Target")
+            .at(10, 10)
+            .define("CLIENT", function () {
+                this.addComponent("DOM, Color")
+                    .color("rgb(255,0,0)")
+                    .netBind("Moved", function (newPos) {
+                        console.log(newPos);
+                        this.at(Math.round(newPos.x / map_grid.tile.width), Math.round(newPos.y / map_grid.tile.height));
+                    });
+            })
+            .define("CLIENT2", function () {
+                this.bind("KeyDown", function (e) {
+                    if (e.key === Crafty.keys["W"] || e.key === Crafty.keys["A"] || e.key === Crafty.keys["S"] || e.key === Crafty.keys["D"]) {
+                        if (e.originalEvent)
+                            delete e.originalEvent;
+                        this.netTrigger("KeyDown", e);
+                    }
+                })
+                .bind("KeyUp", function (e) {
+                    if (e.key === Crafty.keys["W"] || e.key === Crafty.keys["A"] || e.key === Crafty.keys["S"] || e.key === Crafty.keys["D"]) {
+                        if (e.originalEvent)
+                            delete e.originalEvent;
+                        this.netTrigger("KeyUp", e);
+                    }
+                });
+            })
+            .define("SERVER", function () {
+                this.addComponent("Fourway, Target")
+                .fourway(10);
+
+                console.log(this);
+            });
     });
     
     //automatically play the loading scene
@@ -121,6 +166,7 @@ if (typeof require === 'undefined') {
             shooter.addEventListener('click', clickHandler('CLIENT1'));
             targeter.addEventListener('click', clickHandler('CLIENT2'));
             watcher.addEventListener('click', clickHandler('WATCHING'));
+            watcher.addEventListener('touchend', clickHandler('WATCHING'));
         }
     ); 
 }
