@@ -1,45 +1,39 @@
+
+/**
+ * Module dependencies.
+ */
+
 var npm_crafty = require('npm_crafty');
-var path = require('path');
 var express = require('express');
+
+var path = require('path');
+
 var Crafty;
-var clients;
 
 //setup default server with the following arguments
 npm_crafty.setupDefault( function () { //immediate callback
-    //setup additional get requests
-    npm_crafty.app.get('/', function (req, res) {
-        res.sendfile(path.join(__dirname, 'public', 'index.html'));
+    npm_crafty.app.configure('development', function () {
+        npm_crafty.app.use(require('connect-livereload')({port: 35729}));
     });
 
-    npm_crafty.app.use(express.static(path.join(__dirname, 'public')));
-        
+    //setup additional get requests
+    npm_crafty.app.use(express.static(path.join(__dirname, 'build')));
+
     //create Crafty Server and bind it to "Room1"
     Crafty = npm_crafty.createServer("Room1");
-    
-    //start the loading scene of our game
-    var pongBasic = require('./public/javascripts/game.js');
-    pongBasic.startGame(Crafty);
 
-    //make a client counter -> if it reaches 2, start the main scene
-    clients = 0;
-    
+    //server will receive event from client back
+    Crafty.netBind("CustomEvent", function(msg) {
+        console.log("2. Server receive event");
+    });
+
 }, function (socket) { //connect callback
-    //bind to socket
-    npm_crafty.addClient(Crafty, socket);
-    
-    //increase client counter
-    clients++;
-    if (clients === 2) { //2 clients connected
-        //start main scene
-        Crafty.scene("main");
-    }
-    
-}, function (socket) { //disconnect callback
-    //socket will auto leave room
-    
-    clients--;
-    //start the loading scene again
-    Crafty.scene("loading");
-}, process.env.PORT || 3000);
 
-//TODO auto manage rooms and clients;
+    //bind client socket to crafty instance, thus "Room1"
+    npm_crafty.addClient(Crafty, socket);
+
+    //send event to newly connected client
+    Crafty.netTrigger("CustomEvent", "customData");
+
+}, function (socket) { //disconnect callback
+}, process.env.PORT || 3000);
