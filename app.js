@@ -4,8 +4,46 @@ var express = require('express');
 var Crafty;
 var clients;
 
+setupDefault = function(immediateFN, connectFN, disconnectFN, port) {
+    var app = npm_crafty.app = require('express')(),
+        server = npm_crafty.server = require('http').createServer(app),
+        io = npm_crafty.io = require('socket.io').listen(server),
+        path = require('path');
+
+    io.configure(function () {
+        io.set('log level', 2);
+        io.set('transports', ['xhr-polling']);
+    });
+
+    server.listen(process.env.PORT || port || 3000);
+
+    app.get('/npm_crafty.js', function (req, res) {
+        res.sendfile(path.join(__dirname, 'node_modules', 'npm_crafty', 'lib', 'npm_crafty.client.js'));
+    });
+    app.get('/npm_crafty.net.js', function (req, res) {
+        res.sendfile(path.join(__dirname, 'node_modules', 'npm_crafty', 'lib', 'npm_crafty.net.js'));
+    });
+    app.get('/crafty_client.js', function (req, res) {
+        res.sendfile(path.join(__dirname, 'node_modules', 'npm_crafty', 'lib', 'crafty_client.js'));
+    });
+
+
+    io.sockets.on('connection', function (socket) {
+        console.log("Connected ", socket.id);
+        connectFN(socket);
+
+        socket.on('disconnect', function (arg) {
+            console.log("Disconnected ", socket.id);
+            disconnectFN(socket);
+        });
+    });
+
+    immediateFN();
+};
+
+
 //setup default server with the following arguments
-npm_crafty.setupDefault( function () { //immediate callback
+setupDefault( function () { //immediate callback
     //setup additional get requests
     npm_crafty.app.get('/', function (req, res) {
         res.sendfile(path.join(__dirname, 'public', 'index.html'));
