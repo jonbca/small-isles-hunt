@@ -1,68 +1,4 @@
-require=(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({"game":[function(require,module,exports){
-module.exports=require('UKfeBT');
-},{}],"UKfeBT":[function(require,module,exports){
-(function(global){var Bird, Crafty, Game, height, width;
-
-Crafty = require('crafty');
-
-Bird = require('bird');
-
-width = window.innerWidth;
-
-height = window.innerHeight;
-
-Game = {
-  width: window.innerWidth,
-  height: window.innerHeight,
-  start: function() {
-    Crafty.init(width, height);
-    return Crafty.background('rgb(138,194,255)');
-  }
-};
-
-module.exports = Game;
-
-global.addEventListener('load', Game.start);
-
-
-})(self)
-},{"bird":"7AfcJK","crafty":"oxNTuF"}],"bird":[function(require,module,exports){
-module.exports=require('7AfcJK');
-},{}],"7AfcJK":[function(require,module,exports){
-var C;
-
-C = require('crafty');
-
-module.exports = C.c('Bird', {
-  init: function() {
-    this.requires('2D, Canvas, Color');
-    this.color('rgb(20, 125, 40)');
-    return this.attr({
-      w: 100,
-      h: 100
-    });
-  },
-  at: function(x, y) {
-    if (x === void 0 && y === void 0) {
-      return {
-        x: this.x,
-        y: this.y
-      };
-    } else {
-      this.attr({
-        x: x,
-        y: y
-      });
-      return this;
-    }
-  }
-});
-
-
-},{"crafty":"oxNTuF"}],"crafty":[function(require,module,exports){
-module.exports=require('oxNTuF');
-},{}],"oxNTuF":[function(require,module,exports){
-(function(){/*!
+/*!
 * Crafty v0.5.4
 * http://craftyjs.com
 *
@@ -10887,7 +10823,3 @@ Crafty.c("Delay", {
 
 });
 
-
-})()
-},{}]},{},["UKfeBT"])
-;

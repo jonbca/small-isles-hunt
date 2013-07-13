@@ -3,37 +3,29 @@
  * Module dependencies.
  */
 
-var npm_crafty = require('npm_crafty');
-var express = require('express');
+var express = require('express')
+  , http = require('http')
+  , path = require('path');
 
-var path = require('path');
+var app = express();
 
-var Crafty;
+app.configure('development', function () {
+    app.use(require('connect-livereload')({port: 35729}));
+});
 
-//setup default server with the following arguments
-npm_crafty.setupDefault( function () { //immediate callback
-    npm_crafty.app.configure('development', function () {
-        npm_crafty.app.use(require('connect-livereload')({port: 35729}));
-    });
+// all environments
+app.set('port', process.env.PORT || 3000);
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(app.router);
+app.use(express.static(path.join(__dirname, 'build')));
 
-    //setup additional get requests
-    npm_crafty.app.use(express.static(path.join(__dirname, 'build')));
+// development only
+if ('development' == app.get('env')) {
+  app.use(express.errorHandler());
+}
 
-    //create Crafty Server and bind it to "Room1"
-    Crafty = npm_crafty.createServer("Room1");
 
-    //server will receive event from client back
-    Crafty.netBind("CustomEvent", function(msg) {
-        console.log("2. Server receive event");
-    });
-
-}, function (socket) { //connect callback
-
-    //bind client socket to crafty instance, thus "Room1"
-    npm_crafty.addClient(Crafty, socket);
-
-    //send event to newly connected client
-    Crafty.netTrigger("CustomEvent", "customData");
-
-}, function (socket) { //disconnect callback
-}, process.env.PORT || 3000);
+http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});
