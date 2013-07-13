@@ -12,7 +12,16 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            files: ['<%= jshint.files %>']
+            files: ['<%= jshint.files %>'],
+            tasks: ['default']
         }
     });
+
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-browserify');
+
+    grunt.registerTask('default', ['jshint', 'browserify', 'concat']);
+    grunt.registerTask('develop', ['default', 'watch']);
 };
