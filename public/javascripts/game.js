@@ -108,6 +108,7 @@ exports.startGame = function(Crafty) {
                 this.addComponent("DOM, Color")
                     .color("rgb(255,0,0)")
                     .netBind("Moved", function (newPos) {
+                        console.log(newPos);
                         this.at(Math.floor(newPos.x / map_grid.tile.width), Math.floor(newPos.y / map_grid.tile.height));
                     });
             })
@@ -130,6 +131,8 @@ exports.startGame = function(Crafty) {
             .define("SERVER", function () {
                 this.addComponent("Fourway, Target")
                 .fourway(10);
+
+                console.log(this);
             });
     });
     
