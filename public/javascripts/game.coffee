@@ -1,7 +1,18 @@
 Crafty = require 'crafty'
 Bird = require 'bird'
-start = ->
-    Crafty.init 640, 480
-    Crafty.background 'blue'
 
-global.addEventListener 'load', start
+width = window.innerWidth
+height = window.innerHeight
+
+Game =
+    width: window.innerWidth
+    
+    height: window.innerHeight
+
+    start: ->
+        Crafty.init width, height
+        Crafty.background 'rgb(138,194,255)'
+
+module.exports = Game
+
+global.addEventListener 'load', Game.start
