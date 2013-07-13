@@ -2,8 +2,11 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         watch: {
-            files: ['<%= jshint.files %>'],
-            tasks: ['default']
+            files: ['public/**/*'],
+            tasks: ['default'],
+            options: {
+                livereload: 35729
+            }
         },
         browserify: {
             'build/scripts/game.js': ['public/javascripts/game.coffee'],
@@ -33,8 +36,6 @@ module.exports = function (grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-browserify');
 

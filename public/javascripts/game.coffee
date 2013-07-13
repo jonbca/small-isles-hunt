@@ -1,5 +1,5 @@
 Crafty = require 'crafty'
-
+ 
 exports.Game =
     start: ->
         Crafty.init 640, 480
