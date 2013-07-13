@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Duck Hunt</title>
-    <link rel="stylesheet" href="stylesheets/style.css">
+    <title>Pong Basic</title>
     <script src="crafty_client.js"></script>
     <script src="npm_crafty.js"></script>
     <script src="javascripts/game.js"></script>
   </head>
   <body>
-    <div id="buttons">
-        <button type="button" id="CLIENT1">I'm the shooter</button>
-        <button type="button" id="CLIENT2">I'm the targeter</button>
-    </div>
+    <script>
+    window.onload = function() {
+        exports.setupDefault(function() { //immediate callback after Crafty with Crafty.net is available
+            //create Crafty Client
+            Crafty = exports.createClient(window.prompt("Enter CLIENT1 or CLIENT2"));
+            
+            //start the loading scene of our game
+            exports.startGame(Crafty);      
+        }, function(socket) { //connect callback
+            //bind to socket
+            exports.setServer(Crafty, socket);      
+        }, function(socket) { // disconnect callback
+        });
+    };
+    </script>
   </body>
 </html>
