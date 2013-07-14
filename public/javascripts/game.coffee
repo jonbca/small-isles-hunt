@@ -42,6 +42,11 @@ Crafty.scene 'Game', ->
                 Crafty.trigger('Shoot')
         )
 
+    @bind('Shoot', ->
+            if @crosshair.intersect @bird
+                Crafty.trigger('Hit')
+        )
+
     @dog = Crafty.e('2D, DOM, Image')
         .attr({w: Crafty.viewport.width, h: Crafty.viewport.height})
         .bind 'BirdDead', ->
@@ -52,6 +57,7 @@ Crafty.scene 'Game', ->
 , ->
     @bullets.unbind('Shoot')
     @score.unbind('Hit')
+    @dog.unbind('BirdDead')
     @unbind('KeyDown')
 
 Crafty.scene 'Loading', ->

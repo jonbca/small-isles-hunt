@@ -73,6 +73,11 @@ Crafty.scene('Game', function() {
       return Crafty.trigger('Shoot');
     }
   });
+  this.bind('Shoot', function() {
+    if (this.crosshair.intersect(this.bird)) {
+      return Crafty.trigger('Hit');
+    }
+  });
   this.dog = Crafty.e('2D, DOM, Image').attr({
     w: Crafty.viewport.width,
     h: Crafty.viewport.height
@@ -84,6 +89,7 @@ Crafty.scene('Game', function() {
 }, function() {
   this.bullets.unbind('Shoot');
   this.score.unbind('Hit');
+  this.dog.unbind('BirdDead');
   return this.unbind('KeyDown');
 });
 
