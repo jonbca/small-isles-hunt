@@ -22,17 +22,6 @@ animateBird = (data) ->
 
     @attr 'animation': "BirdMoving#{yDirection}#{xDirection}"
 
-    # if data.x > 0 and data.y > 0
-    #     @attr 'animation': 'BirdMovingDownRight'
-    # else if data.x > 0 and data.y < 0
-    #     @attr 'animation': 'BirdMovingUpRight'
-    # else if data.x < 0 and data.y > 0
-    #     @attr 'animation': 'BirdMovingDownLeft'
-    # else if data.x < 0 and data.y < 0
-    #     @attr 'animation': 'BirdMovingUpLeft'
-    # else
-    #     @stop    
-
 C.c 'Goose',
     init: ->
         @requires('Bird, spr_goose, SpriteAnimation')

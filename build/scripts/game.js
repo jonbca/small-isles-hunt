@@ -17,127 +17,7 @@ GameState = (function() {
 module.exports.GameState = new GameState();
 
 
-},{}],"game":[function(require,module,exports){
-module.exports=require('UKfeBT');
-},{}],"UKfeBT":[function(require,module,exports){
-(function(global){var Bird, Bullets, Crafty, Crosshair, Game, Score;
-
-Crafty = require('crafty');
-
-Bird = require('bird');
-
-Crosshair = require('crosshair');
-
-Score = require('score');
-
-Bullets = require('bullets');
-
-Game = {
-  grid: {
-    width: 12,
-    height: 8,
-    tile: {
-      width: 80,
-      height: 80
-    }
-  },
-  width: 960,
-  height: 640,
-  ground_height: 6,
-  start: function() {
-    Crafty.init(Game.width, Game.height);
-    Crafty.background('url(/images/dog-animation-bknd.jpg)');
-    return Crafty.scene('Loading');
-  }
-};
-
-Crafty.scene('Game', function() {
-  console.log('Game');
-  this.bird = Crafty.e('Eagle').at(11, 7);
-  this.crosshair = Crafty.e('Crosshair').at(2, 2);
-  this.score = Crafty.e('Score').bind('Hit', function() {
-    console.log('Hit');
-    return this.addPoints();
-  });
-  this.bullets = Crafty.e('Bullets').bind('Shoot', function() {
-    console.log('Shoot');
-    return this.shoot();
-  });
-  this.bind('KeyDown', function(e) {
-    if (e.key === Crafty.keys['SPACE']) {
-      return Crafty.trigger('Shoot');
-    }
-  });
-  return Crafty.audio.play('theme');
-}, function() {
-  this.bullets.unbind('Shoot');
-  this.score.unbind('Hit');
-  return this.unbind('KeyDown');
-});
-
-Crafty.scene('Loading', function() {
-  console.log('Loading');
-  Crafty.e('2D, DOM, Text').text('Loading...').attr({
-    x: 0,
-    y: Game.height / 2 - 24,
-    w: Game.width
-  }).css({
-    'font-size': '24px',
-    'font-family': 'sans-serif',
-    'color': 'white',
-    'text-align': 'center'
-  });
-  return Crafty.load(['sounds/shot_sound_effect.mp3', 'sounds/duck_hunt_theme.mp3', 'sounds/wing_flap.mp3', 'images/dog-animation.gif', 'images/eagle-animation.png', 'images/goose-animation.png', 'images/crosshair-80x80.png'], function() {
-    Crafty.audio.add({
-      shoot: ['sounds/shot_sound_effect.mp3'],
-      theme: ['sounds/duck_hunt_theme.mp3'],
-      wing_flap: ['sounds/wing_flap.mp3']
-    });
-    Crafty.sprite(80, 'images/goose-animation.png', {
-      spr_goose: [0, 0]
-    });
-    Crafty.sprite(80, 'images/eagle-animation.png', {
-      spr_eagle: [0, 0]
-    });
-    Crafty.sprite(80, 'images/crosshair-80x80.png', {
-      spr_crosshair: [0, 0]
-    });
-    return Crafty.scene('Game');
-  });
-});
-
-module.exports = Game;
-
-Crafty.audio.supported['mp3'] = true;
-
-Crafty.c('Grid', {
-  init: function() {
-    return this.attr({
-      w: Game.grid.tile.width,
-      h: Game.grid.tile.height
-    });
-  },
-  at: function(x, y) {
-    if (x === void 0 && y === void 0) {
-      return {
-        x: this.x / Game.grid.tile.width,
-        y: this.y / Game.grid.tile.height
-      };
-    } else {
-      this.attr({
-        x: x * Game.grid.tile.width,
-        y: y * Game.grid.tile.height
-      });
-      return this;
-    }
-  }
-});
-
-global.addEventListener('load', Game.start);
-
-
-})(self)
-},{"bird":"7AfcJK","bullets":"nnIYLB","crafty":"oxNTuF","crosshair":"Mh8BV1","score":"SW2V8u"}],"bird":[function(require,module,exports){
+},{}],"bird":[function(require,module,exports){
 module.exports=require('7AfcJK');
 },{}],"7AfcJK":[function(require,module,exports){
 var C, animateBird;
@@ -336,7 +216,127 @@ Crafty.c('Score', {
 });
 
 
-},{"crafty":"oxNTuF"}],"crafty":[function(require,module,exports){
+},{"crafty":"oxNTuF"}],"game":[function(require,module,exports){
+module.exports=require('UKfeBT');
+},{}],"UKfeBT":[function(require,module,exports){
+(function(global){var Bird, Bullets, Crafty, Crosshair, Game, Score;
+
+Crafty = require('crafty');
+
+Bird = require('bird');
+
+Crosshair = require('crosshair');
+
+Score = require('score');
+
+Bullets = require('bullets');
+
+Game = {
+  grid: {
+    width: 12,
+    height: 8,
+    tile: {
+      width: 80,
+      height: 80
+    }
+  },
+  width: 960,
+  height: 640,
+  ground_height: 6,
+  start: function() {
+    Crafty.init(Game.width, Game.height);
+    Crafty.background('url(/images/dog-animation-bknd.jpg)');
+    return Crafty.scene('Loading');
+  }
+};
+
+Crafty.scene('Game', function() {
+  console.log('Game');
+  this.bird = Crafty.e('Eagle').at(11, 7);
+  this.crosshair = Crafty.e('Crosshair').at(2, 2);
+  this.score = Crafty.e('Score').bind('Hit', function() {
+    console.log('Hit');
+    return this.addPoints();
+  });
+  this.bullets = Crafty.e('Bullets').bind('Shoot', function() {
+    console.log('Shoot');
+    return this.shoot();
+  });
+  this.bind('KeyDown', function(e) {
+    if (e.key === Crafty.keys['SPACE']) {
+      return Crafty.trigger('Shoot');
+    }
+  });
+  return Crafty.audio.play('theme');
+}, function() {
+  this.bullets.unbind('Shoot');
+  this.score.unbind('Hit');
+  return this.unbind('KeyDown');
+});
+
+Crafty.scene('Loading', function() {
+  console.log('Loading');
+  Crafty.e('2D, DOM, Text').text('Loading...').attr({
+    x: 0,
+    y: Game.height / 2 - 24,
+    w: Game.width
+  }).css({
+    'font-size': '24px',
+    'font-family': 'sans-serif',
+    'color': 'white',
+    'text-align': 'center'
+  });
+  return Crafty.load(['sounds/shot_sound_effect.mp3', 'sounds/duck_hunt_theme.mp3', 'sounds/wing_flap.mp3', 'images/dog-animation.gif', 'images/eagle-animation.png', 'images/goose-animation.png', 'images/crosshair-80x80.png'], function() {
+    Crafty.audio.add({
+      shoot: ['sounds/shot_sound_effect.mp3'],
+      theme: ['sounds/duck_hunt_theme.mp3'],
+      wing_flap: ['sounds/wing_flap.mp3']
+    });
+    Crafty.sprite(80, 'images/goose-animation.png', {
+      spr_goose: [0, 0]
+    });
+    Crafty.sprite(80, 'images/eagle-animation.png', {
+      spr_eagle: [0, 0]
+    });
+    Crafty.sprite(80, 'images/crosshair-80x80.png', {
+      spr_crosshair: [0, 0]
+    });
+    return Crafty.scene('Game');
+  });
+});
+
+module.exports = Game;
+
+Crafty.audio.supported['mp3'] = true;
+
+Crafty.c('Grid', {
+  init: function() {
+    return this.attr({
+      w: Game.grid.tile.width,
+      h: Game.grid.tile.height
+    });
+  },
+  at: function(x, y) {
+    if (x === void 0 && y === void 0) {
+      return {
+        x: this.x / Game.grid.tile.width,
+        y: this.y / Game.grid.tile.height
+      };
+    } else {
+      this.attr({
+        x: x * Game.grid.tile.width,
+        y: y * Game.grid.tile.height
+      });
+      return this;
+    }
+  }
+});
+
+global.addEventListener('load', Game.start);
+
+
+})(self)
+},{"bird":"7AfcJK","bullets":"nnIYLB","crafty":"oxNTuF","crosshair":"Mh8BV1","score":"SW2V8u"}],"crafty":[function(require,module,exports){
 module.exports=require('oxNTuF');
 },{}],"oxNTuF":[function(require,module,exports){
 (function(){/*!
