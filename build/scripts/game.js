@@ -87,10 +87,11 @@ Crafty.scene('Loading', function() {
     'color': 'white',
     'text-align': 'center'
   });
-  return Crafty.load(['sounds/shot_sound_effect.mp3', 'images/dog-animation.gif', 'images/eagle-animation.png', 'images/goose-animation.png', 'images/crosshair-80x80.png'], function() {
+  return Crafty.load(['sounds/shot_sound_effect.mp3', 'sounds/duck_hunt_theme.mp3', 'sounds/wing_flap.mp3', 'images/dog-animation.gif', 'images/eagle-animation.png', 'images/goose-animation.png', 'images/crosshair-80x80.png'], function() {
     Crafty.audio.add({
       shoot: ['sounds/shot_sound_effect.mp3'],
-      theme: ['sounds/duck_hunt_theme.mp3']
+      theme: ['sounds/duck_hunt_theme.mp3'],
+      wing_flap: ['sounds/wing_flap.mp3']
     });
     Crafty.sprite(80, 'images/goose-animation.png', {
       spr_goose: [0, 0]
@@ -139,7 +140,7 @@ global.addEventListener('load', Game.start);
 },{"bird":"7AfcJK","bullets":"nnIYLB","crafty":"oxNTuF","crosshair":"Mh8BV1","score":"SW2V8u"}],"bird":[function(require,module,exports){
 module.exports=require('7AfcJK');
 },{}],"7AfcJK":[function(require,module,exports){
-var C;
+var C, animateBird;
 
 C = require('crafty');
 
@@ -150,32 +151,47 @@ module.exports = C.c('Bird', {
       w: 80,
       h: 80
     });
-    return this.multiway(4, {
+    this.multiway(4, {
       'UP_ARROW': -90,
       'DOWN_ARROW': 90,
       'RIGHT_ARROW': 0,
       'LEFT_ARROW': 180
     });
+    return this.attr({
+      animation: 'BirdMovingUpLeft'
+    });
   }
 });
+
+animateBird = function(data) {
+  C.audio.play('wing_flap');
+  if (data.x > 0 && data.y > 0) {
+    return this.attr({
+      'animation': 'BirdMovingDownRight'
+    });
+  } else if (data.x > 0 && data.y < 0) {
+    return this.attr({
+      'animation': 'BirdMovingUpRight'
+    });
+  } else if (data.x < 0 && data.y > 0) {
+    return this.attr({
+      'animation': 'BirdMovingDownLeft'
+    });
+  } else if (data.x < 0 && data.y < 0) {
+    return this.attr({
+      'animation': 'BirdMovingUpLeft'
+    });
+  }
+};
 
 C.c('Goose', {
   init: function() {
     this.requires('Bird, spr_goose, SpriteAnimation').animate('BirdMovingUpLeft', 0, 0, 1).animate('BirdMovingDownLeft', 0, 1, 1).animate('BirdMovingDownRight', 0, 2, 1).animate('BirdMovingUpRight', 0, 3, 1).animate('BirdShot', 0, 4, 1);
-    return this.bind('NewDirection', function(data) {
-      var animationSpeed;
-      animationSpeed = 12;
-      if (data.x > 0 && data.y > 0) {
-        return this.animate('BirdMovingDownRight', animationSpeed, 10);
-      } else if (data.x > 0 && data.y < 0) {
-        return this.animate('BirdMovingUpRight', animationSpeed, 10);
-      } else if (data.x < 0 && data.y > 0) {
-        return this.animate('BirdMovingDownLeft', animationSpeed, 10);
-      } else if (data.x < 0 && data.y < 0) {
-        return this.animate('BirdMovingUpLeft', animationSpeed, 10);
-      } else {
-        return this.stop;
-      }
+    this.bind('NewDirection', animateBird);
+    return this.bind('Moved', function(data) {
+      var anim;
+      anim = this.attr('animation');
+      return this.animate(anim, 12, 2);
     });
   }
 });
@@ -183,20 +199,11 @@ C.c('Goose', {
 C.c('Eagle', {
   init: function() {
     this.requires('Bird, spr_eagle, SpriteAnimation').animate('BirdMovingUpLeft', 0, 0, 1).animate('BirdMovingDownLeft', 0, 1, 1).animate('BirdMovingDownRight', 0, 2, 1).animate('BirdMovingUpRight', 0, 3, 1).animate('BirdShot', 0, 4, 1);
-    return this.bind('NewDirection', function(data) {
-      var animationSpeed;
-      animationSpeed = 12;
-      if (data.x > 0 && data.y > 0) {
-        return this.animate('BirdMovingDownRight', animationSpeed, 10);
-      } else if (data.x > 0 && data.y < 0) {
-        return this.animate('BirdMovingUpRight', animationSpeed, 10);
-      } else if (data.x < 0 && data.y > 0) {
-        return this.animate('BirdMovingDownLeft', animationSpeed, 10);
-      } else if (data.x < 0 && data.y < 0) {
-        return this.animate('BirdMovingUpLeft', animationSpeed, 10);
-      } else {
-        return this.stop;
-      }
+    this.bind('NewDirection', animateBird);
+    return this.bind('Moved', function(data) {
+      var anim;
+      anim = this.attr('animation');
+      return this.animate(anim, 12, 3);
     });
   }
 });
