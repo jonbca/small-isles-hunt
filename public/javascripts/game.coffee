@@ -23,8 +23,6 @@ Game =
         Crafty.scene 'Loading'
 
 Crafty.scene 'Game', ->
-    console.log 'Game'
-
     @bird = Crafty.e('Eagle').at(11, 7)
 
     @crosshair = Crafty.e('Crosshair').at(2, 2)
@@ -44,6 +42,12 @@ Crafty.scene 'Game', ->
                 Crafty.trigger('Shoot')
         )
 
+    @dog = Crafty.e('2D, DOM, Image')
+        .attr({w: Crafty.viewport.width, h: Crafty.viewport.height})
+        .bind 'BirdDead', ->
+            console.log 'BirdDead'
+            @image '/images/dog-animation.gif'
+
     Crafty.audio.play('theme')
 , ->
     @bullets.unbind('Shoot')
@@ -58,13 +62,13 @@ Crafty.scene 'Loading', ->
         .css({ 'font-size': '24px', 'font-family': 'sans-serif', 'color': 'white', 'text-align': 'center' })
 
     Crafty.load [
-        'sounds/shot_sound_effect.mp3',
-        'sounds/duck_hunt_theme.mp3',
-        'sounds/wing_flap.mp3'
-        'images/dog-animation.gif',
-        'images/eagle-animation.png',
-        'images/goose-animation.png',
-        'images/crosshair-80x80.png'
+        '/sounds/shot_sound_effect.mp3',
+        '/sounds/duck_hunt_theme.mp3',
+        '/sounds/wing_flap.mp3'
+        '/images/dog-animation.gif',
+        '/images/eagle-animation.png',
+        '/images/goose-animation.png',
+        '/images/crosshair-80x80.png'
         ], ->
             Crafty.audio.add
                 shoot: ['sounds/shot_sound_effect.mp3'],
