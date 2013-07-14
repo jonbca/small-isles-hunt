@@ -61,7 +61,8 @@ Crafty.scene 'Loading', ->
         'sounds/shot_sound_effect.mp3',
         'images/dog-animation.gif',
         'images/eagle-animation.png',
-        'images/goose-animation.png'
+        'images/goose-animation.png',
+        'images/crosshair-80x80.png'
         ], ->
             Crafty.audio.add
                 shoot: ['sounds/shot_sound_effect.mp3'],
@@ -72,6 +73,9 @@ Crafty.scene 'Loading', ->
 
             Crafty.sprite 80, 'images/eagle-animation.png',
                 spr_eagle: [0, 0]
+
+            Crafty.sprite 80, 'images/crosshair-80x80.png',
+                spr_crosshair: [0, 0]
 
             Crafty.scene 'Game'
 

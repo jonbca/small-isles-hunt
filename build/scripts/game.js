@@ -87,7 +87,7 @@ Crafty.scene('Loading', function() {
     'color': 'white',
     'text-align': 'center'
   });
-  return Crafty.load(['sounds/shot_sound_effect.mp3', 'images/dog-animation.gif', 'images/eagle-animation.png', 'images/goose-animation.png'], function() {
+  return Crafty.load(['sounds/shot_sound_effect.mp3', 'images/dog-animation.gif', 'images/eagle-animation.png', 'images/goose-animation.png', 'images/crosshair-80x80.png'], function() {
     Crafty.audio.add({
       shoot: ['sounds/shot_sound_effect.mp3'],
       theme: ['sounds/duck_hunt_theme.mp3']
@@ -97,6 +97,9 @@ Crafty.scene('Loading', function() {
     });
     Crafty.sprite(80, 'images/eagle-animation.png', {
       spr_eagle: [0, 0]
+    });
+    Crafty.sprite(80, 'images/crosshair-80x80.png', {
+      spr_crosshair: [0, 0]
     });
     return Crafty.scene('Game');
   });
@@ -245,8 +248,7 @@ Crafty = require('crafty');
 
 module.exports = Crafty.c('Crosshair', {
   init: function() {
-    this.requires('2D, Canvas, Grid, Color, Multiway');
-    this.color('rgb(255,0,0)');
+    this.requires('2D, Canvas, Grid, spr_crosshair, Multiway');
     this.attr({
       w: 80,
       h: 80
