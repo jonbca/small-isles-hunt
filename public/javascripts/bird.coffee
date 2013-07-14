@@ -5,6 +5,23 @@ module.exports = C.c 'Bird',
         @requires('2D, Canvas, Grid, Multiway')
         @attr(w: 80, h: 80)
         @multiway(4, 'UP_ARROW': -90, 'DOWN_ARROW': 90, 'RIGHT_ARROW': 0, 'LEFT_ARROW': 180)
+        @attr(animation: 'BirdMovingUpLeft')
+
+animateBird = (data) ->
+    #animationSpeed = 12
+
+    C.audio.play 'wing_flap'
+
+    if data.x > 0 and data.y > 0
+        @attr 'animation': 'BirdMovingDownRight'
+    else if data.x > 0 and data.y < 0
+        @attr 'animation': 'BirdMovingUpRight'
+    else if data.x < 0 and data.y > 0
+        @attr 'animation': 'BirdMovingDownLeft'
+    else if data.x < 0 and data.y < 0
+        @attr 'animation': 'BirdMovingUpLeft'
+    # else
+    #     @stop    
 
 C.c 'Goose',
     init: ->
@@ -15,25 +32,10 @@ C.c 'Goose',
         .animate('BirdMovingUpRight', 0, 3, 1)
         .animate('BirdShot', 0, 4, 1)
 
-
-        @bind('NewDirection', (data) ->
-            animationSpeed = 12
-
-            if data.x > 0 and data.y > 0
-                @animate 'BirdMovingDownRight', animationSpeed, 10
-            else if data.x > 0 and data.y < 0
-                @animate 'BirdMovingUpRight', animationSpeed, 10
-            else if data.x < 0 and data.y > 0
-                @animate 'BirdMovingDownLeft', animationSpeed, 10
-            else if data.x < 0 and data.y < 0
-                @animate 'BirdMovingUpLeft', animationSpeed, 10
-            else
-                @stop
-        )
-
-        @Bind('Hit', ->
-            
-        )
+        @bind 'NewDirection', animateBird
+        @bind 'Moved', (data) ->
+            anim = @attr('animation')
+            @animate anim, 12, 2
 
 C.c 'Eagle',
     init: ->
@@ -44,18 +46,7 @@ C.c 'Eagle',
         .animate('BirdMovingUpRight', 0, 3, 1)
         .animate('BirdShot', 0, 4, 1)
 
-
-        @bind('NewDirection', (data) ->
-            animationSpeed = 12
-
-            if data.x > 0 and data.y > 0
-                @animate 'BirdMovingDownRight', animationSpeed, 10
-            else if data.x > 0 and data.y < 0
-                @animate 'BirdMovingUpRight', animationSpeed, 10
-            else if data.x < 0 and data.y > 0
-                @animate 'BirdMovingDownLeft', animationSpeed, 10
-            else if data.x < 0 and data.y < 0
-                @animate 'BirdMovingUpLeft', animationSpeed, 10
-            else
-                @stop
-        )
+        @bind 'NewDirection', animateBird
+        @bind 'Moved', (data) ->
+            anim = @attr('animation')
+            @animate anim, 12, 3
