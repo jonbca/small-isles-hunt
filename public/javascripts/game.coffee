@@ -24,6 +24,9 @@ Game =
 
 Crafty.scene 'Game', ->
     console.log 'Game'
+
+    Crafty.e('Bird').at(5, 5)
+
     Crafty.e('Crosshair').at(2, 2)
 
     Crafty.e('Score').bind('Hit', ->
@@ -41,6 +44,8 @@ Crafty.scene 'Game', ->
                 Crafty.trigger('Shoot')
         )
 
+    Crafty.audio.play('theme')
+
 Crafty.scene 'Loading', ->
     console.log 'Loading'
     Crafty.e('2D, DOM, Text')
@@ -48,9 +53,15 @@ Crafty.scene 'Loading', ->
         .attr({ x: 0, y: Game.height/2 - 24, w: Game.width })
         .css({ 'font-size': '24px', 'font-family': 'sans-serif', 'color': 'white', 'text-align': 'center' })
 
-    Crafty.load ['sounds/shot_sound_effect.mp3'], ->
+    Crafty.load [
+        'sounds/shot_sound_effect.mp3',
+        'images/dog-animation.gif',
+        'images/eagle-animation.png',
+        'images/goose-animation.png'
+        ], ->
         Crafty.audio.add
-            shoot: ['sounds/shot_sound_effect.mp3']
+            shoot: ['sounds/shot_sound_effect.mp3'],
+            theme: ['sounds/duck_hunt_theme.mp3']
     
         Crafty.scene 'Game'
 

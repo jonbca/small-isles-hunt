@@ -17,7 +17,113 @@ GameState = (function() {
 module.exports.GameState = new GameState();
 
 
-},{}],"bird":[function(require,module,exports){
+},{}],"game":[function(require,module,exports){
+module.exports=require('UKfeBT');
+},{}],"UKfeBT":[function(require,module,exports){
+(function(global){var Bird, Bullets, Crafty, Crosshair, Game, Score;
+
+Crafty = require('crafty');
+
+Bird = require('bird');
+
+Crosshair = require('crosshair');
+
+Score = require('score');
+
+Bullets = require('bullets');
+
+Game = {
+  grid: {
+    width: 12,
+    height: 8,
+    tile: {
+      width: 80,
+      height: 80
+    }
+  },
+  width: 960,
+  height: 640,
+  ground_height: 6,
+  start: function() {
+    Crafty.init(Game.width, Game.height);
+    Crafty.background('url(/images/dog-animation-bknd.jpg)');
+    return Crafty.scene('Loading');
+  }
+};
+
+Crafty.scene('Game', function() {
+  console.log('Game');
+  Crafty.e('Bird').at(5, 5);
+  Crafty.e('Crosshair').at(2, 2);
+  Crafty.e('Score').bind('Hit', function() {
+    console.log('Hit');
+    return this.addPoints();
+  });
+  Crafty.e('Bullets').bind('Shoot', function() {
+    console.log('Shoot');
+    return this.shoot();
+  });
+  Crafty.bind('KeyDown', function(e) {
+    if (e.key === Crafty.keys['SPACE']) {
+      return Crafty.trigger('Shoot');
+    }
+  });
+  return Crafty.audio.play('theme');
+});
+
+Crafty.scene('Loading', function() {
+  console.log('Loading');
+  Crafty.e('2D, DOM, Text').text('Loading...').attr({
+    x: 0,
+    y: Game.height / 2 - 24,
+    w: Game.width
+  }).css({
+    'font-size': '24px',
+    'font-family': 'sans-serif',
+    'color': 'white',
+    'text-align': 'center'
+  });
+  return Crafty.load(['sounds/shot_sound_effect.mp3', 'images/dog-animation.gif', 'images/eagle-animation.png', 'images/goose-animation.png'], function() {
+    Crafty.audio.add({
+      shoot: ['sounds/shot_sound_effect.mp3'],
+      theme: ['sounds/duck_hunt_theme.mp3']
+    });
+    return Crafty.scene('Game');
+  });
+});
+
+module.exports = Game;
+
+Crafty.audio.supported['mp3'] = true;
+
+Crafty.c('Grid', {
+  init: function() {
+    return this.attr({
+      w: Game.grid.tile.width,
+      h: Game.grid.tile.height
+    });
+  },
+  at: function(x, y) {
+    if (x === void 0 && y === void 0) {
+      return {
+        x: this.x / Game.grid.tile.width,
+        y: this.y / Game.grid.tile.height
+      };
+    } else {
+      this.attr({
+        x: x * Game.grid.tile.width,
+        y: y * Game.grid.tile.height
+      });
+      return this;
+    }
+  }
+});
+
+global.addEventListener('load', Game.start);
+
+
+})(self)
+},{"bird":"7AfcJK","bullets":"nnIYLB","crafty":"oxNTuF","crosshair":"Mh8BV1","score":"SW2V8u"}],"bird":[function(require,module,exports){
 module.exports=require('7AfcJK');
 },{}],"7AfcJK":[function(require,module,exports){
 var C;
@@ -26,26 +132,18 @@ C = require('crafty');
 
 module.exports = C.c('Bird', {
   init: function() {
-    this.requires('2D, Canvas, Color');
-    this.color('rgb(20, 125, 40)');
-    return this.attr({
-      w: 100,
-      h: 100
+    this.requires('2D, Canvas, Grid, Color, Multiway');
+    this.color('rgb(147,224,0)');
+    this.attr({
+      w: 80,
+      h: 80
     });
-  },
-  at: function(x, y) {
-    if (x === void 0 && y === void 0) {
-      return {
-        x: this.x,
-        y: this.y
-      };
-    } else {
-      this.attr({
-        x: x,
-        y: y
-      });
-      return this;
-    }
+    return this.multiway(4, {
+      'UP_ARROW': -90,
+      'DOWN_ARROW': 90,
+      'RIGHT_ARROW': 0,
+      'LEFT_ARROW': 180
+    });
   }
 });
 
@@ -76,11 +174,11 @@ Crafty.c('Bullets', {
     return "" + this.bullets;
   },
   shoot: function() {
-    this.bullets -= 1;
-    this.text(this.bulletsText);
-    if (this.bullets < 0) {
+    if (this.bullets <= 0) {
       return Crafty.trigger("LoseRound");
     } else {
+      this.bullets -= 1;
+      this.text(this.bulletsText);
       return Crafty.audio.play('shoot');
     }
   }
@@ -96,13 +194,18 @@ Crafty = require('crafty');
 
 module.exports = Crafty.c('Crosshair', {
   init: function() {
-    this.requires('2D, Canvas, Grid, Color, Fourway');
+    this.requires('2D, Canvas, Grid, Color, Multiway');
     this.color('rgb(255,0,0)');
     this.attr({
       w: 80,
       h: 80
     });
-    return this.fourway(4);
+    return this.multiway(4, {
+      'W': -90,
+      'S': 90,
+      'D': 0,
+      'A': 180
+    });
   }
 });
 
@@ -11006,108 +11109,5 @@ Crafty.c("Delay", {
 
 
 })()
-},{}],"game":[function(require,module,exports){
-module.exports=require('UKfeBT');
-},{}],"UKfeBT":[function(require,module,exports){
-(function(global){var Bird, Bullets, Crafty, Crosshair, Game, Score;
-
-Crafty = require('crafty');
-
-Bird = require('bird');
-
-Crosshair = require('crosshair');
-
-Score = require('score');
-
-Bullets = require('bullets');
-
-Game = {
-  grid: {
-    width: 12,
-    height: 8,
-    tile: {
-      width: 80,
-      height: 80
-    }
-  },
-  width: 960,
-  height: 640,
-  ground_height: 6,
-  start: function() {
-    Crafty.init(Game.width, Game.height);
-    Crafty.background('url(/images/dog-animation-bknd.jpg)');
-    return Crafty.scene('Loading');
-  }
-};
-
-Crafty.scene('Game', function() {
-  console.log('Game');
-  Crafty.e('Crosshair').at(2, 2);
-  Crafty.e('Score').bind('Hit', function() {
-    console.log('Hit');
-    return this.addPoints();
-  });
-  Crafty.e('Bullets').bind('Shoot', function() {
-    console.log('Shoot');
-    return this.shoot();
-  });
-  return Crafty.bind('KeyDown', function(e) {
-    if (e.key === Crafty.keys['SPACE']) {
-      return Crafty.trigger('Shoot');
-    }
-  });
-});
-
-Crafty.scene('Loading', function() {
-  console.log('Loading');
-  Crafty.e('2D, DOM, Text').text('Loading...').attr({
-    x: 0,
-    y: Game.height / 2 - 24,
-    w: Game.width
-  }).css({
-    'font-size': '24px',
-    'font-family': 'sans-serif',
-    'color': 'white',
-    'text-align': 'center'
-  });
-  return Crafty.load(['sounds/shot_sound_effect.mp3'], function() {
-    Crafty.audio.add({
-      shoot: ['sounds/shot_sound_effect.mp3']
-    });
-    return Crafty.scene('Game');
-  });
-});
-
-module.exports = Game;
-
-Crafty.audio.supported['mp3'] = true;
-
-Crafty.c('Grid', {
-  init: function() {
-    return this.attr({
-      w: Game.grid.tile.width,
-      h: Game.grid.tile.height
-    });
-  },
-  at: function(x, y) {
-    if (x === void 0 && y === void 0) {
-      return {
-        x: this.x / Game.grid.tile.width,
-        y: this.y / Game.grid.tile.height
-      };
-    } else {
-      this.attr({
-        x: x * Game.grid.tile.width,
-        y: y * Game.grid.tile.height
-      });
-      return this;
-    }
-  }
-});
-
-global.addEventListener('load', Game.start);
-
-
-})(self)
-},{"bird":"7AfcJK","bullets":"nnIYLB","crafty":"oxNTuF","crosshair":"Mh8BV1","score":"SW2V8u"}]},{},["UKfeBT"])
+},{}]},{},["UKfeBT"])
 ;
