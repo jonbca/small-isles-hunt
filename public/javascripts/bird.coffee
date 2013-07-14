@@ -31,6 +31,10 @@ C.c 'Goose',
                 @stop
         )
 
+        @Bind('Hit', ->
+            
+        )
+
 C.c 'Eagle',
     init: ->
         @requires('Bird, spr_eagle, SpriteAnimation')
