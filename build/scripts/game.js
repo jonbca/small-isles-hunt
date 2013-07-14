@@ -1,13 +1,36 @@
-require=(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({"game":[function(require,module,exports){
+require=(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({"game_state":[function(require,module,exports){
+module.exports=require('PorBjV');
+},{}],"PorBjV":[function(require,module,exports){
+var GameState;
+
+GameState = (function() {
+  function GameState() {}
+
+  GameState.prototype.points = 0;
+
+  GameState.prototype.bullets = 3;
+
+  return GameState;
+
+})();
+
+module.exports.GameState = new GameState();
+
+
+},{}],"game":[function(require,module,exports){
 module.exports=require('UKfeBT');
 },{}],"UKfeBT":[function(require,module,exports){
-(function(global){var Bird, Crafty, Crosshair, Game;
+(function(global){var Bird, Bullets, Crafty, Crosshair, Game, Score;
 
 Crafty = require('crafty');
 
 Bird = require('bird');
 
 Crosshair = require('crosshair');
+
+Score = require('score');
+
+Bullets = require('bullets');
 
 Game = {
   grid: {
@@ -21,11 +44,23 @@ Game = {
   width: 960,
   height: 640,
   ground_height: 6,
-  points: 0,
   start: function() {
     Crafty.init(Game.width, Game.height);
     Crafty.background('url(/images/dog-animation-bknd.jpg)');
-    return Crafty.e('Crosshair').at(2, 2);
+    Crafty.e('Crosshair').at(2, 2);
+    Crafty.e('Score').bind('Hit', function() {
+      console.log('Hit');
+      return this.addPoints();
+    });
+    Crafty.e('Bullets').bind('Shoot', function() {
+      console.log('Shoot');
+      return this.shoot();
+    });
+    return Crafty.bind('KeyDown', function(e) {
+      if (e.key === Crafty.keys['SPACE']) {
+        return Crafty.trigger('Shoot');
+      }
+    });
   }
 };
 
@@ -58,7 +93,7 @@ global.addEventListener('load', Game.start);
 
 
 })(self)
-},{"bird":"7AfcJK","crafty":"oxNTuF","crosshair":"Mh8BV1"}],"bird":[function(require,module,exports){
+},{"bird":"7AfcJK","bullets":"nnIYLB","crafty":"oxNTuF","crosshair":"Mh8BV1","score":"SW2V8u"}],"bird":[function(require,module,exports){
 module.exports=require('7AfcJK');
 },{}],"7AfcJK":[function(require,module,exports){
 var C;
@@ -86,6 +121,41 @@ module.exports = C.c('Bird', {
         y: y
       });
       return this;
+    }
+  }
+});
+
+
+},{"crafty":"oxNTuF"}],"bullets":[function(require,module,exports){
+module.exports=require('nnIYLB');
+},{}],"nnIYLB":[function(require,module,exports){
+var Crafty;
+
+Crafty = require('crafty');
+
+Crafty.c('Bullets', {
+  init: function() {
+    this.requires('2D, DOM, Text');
+    this.attr({
+      bullets: 3,
+      x: 900,
+      y: 30
+    });
+    this.text(this.bulletsText);
+    this.textFont({
+      size: '40px',
+      weight: 'bold'
+    });
+    return this.textColor('#ff0000');
+  },
+  bulletsText: function() {
+    return "" + this.bullets;
+  },
+  shoot: function() {
+    this.bullets -= 1;
+    this.text(this.bulletsText);
+    if (this.bullets === 0) {
+      return Crafty.trigger("LoseRound");
     }
   }
 });
@@ -144,7 +214,43 @@ Crafty.c('Grid', {
 });
 
 
-},{"crafty":"oxNTuF","game":"UKfeBT"}],"crafty":[function(require,module,exports){
+},{"crafty":"oxNTuF","game":"UKfeBT"}],"score":[function(require,module,exports){
+module.exports=require('SW2V8u');
+},{}],"SW2V8u":[function(require,module,exports){
+var Crafty;
+
+Crafty = require('crafty');
+
+Crafty.c('Score', {
+  init: function() {
+    this.requires('2D, DOM, Text');
+    this.attr({
+      points: 0,
+      x: 30,
+      y: 30
+    });
+    this.text(this.scoreText);
+    this.textColor('#ffffff');
+    return this.textFont({
+      size: '40px',
+      weight: 'bold'
+    });
+  },
+  scoreText: function() {
+    return "" + this.points;
+  },
+  addPoints: function() {
+    var points;
+    points = this.attr('points');
+    this.attr({
+      points: points + 500
+    });
+    return this.text(this.scoreText);
+  }
+});
+
+
+},{"crafty":"oxNTuF"}],"crafty":[function(require,module,exports){
 module.exports=require('oxNTuF');
 },{}],"oxNTuF":[function(require,module,exports){
 (function(){/*!

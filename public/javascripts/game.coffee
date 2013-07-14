@@ -1,7 +1,8 @@
 Crafty = require 'crafty'
 Bird = require 'bird'
 Crosshair = require 'crosshair'
-
+Score = require 'score'
+Bullets = require 'bullets'
 Game =
     grid:
         width: 12
@@ -16,12 +17,24 @@ Game =
 
     ground_height: 6
 
-    points: 0
-
     start: ->
         Crafty.init Game.width, Game.height
         Crafty.background 'url(/images/dog-animation-bknd.jpg)'
         Crafty.e('Crosshair').at(2, 2)
+        Crafty.e('Score').bind('Hit', ->
+                console.log('Hit')
+                @addPoints()
+            )
+        
+        Crafty.e('Bullets').bind('Shoot', ->
+                console.log('Shoot')
+                @shoot()
+            )
+
+        Crafty.bind('KeyDown', (e) ->
+                if e.key is Crafty.keys['SPACE']
+                    Crafty.trigger('Shoot')
+            )
 
 module.exports = Game
 
