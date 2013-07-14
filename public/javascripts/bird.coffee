@@ -30,3 +30,28 @@ C.c 'Goose',
             else
                 @stop
         )
+
+C.c 'Eagle',
+    init: ->
+        @requires('Bird, spr_eagle, SpriteAnimation')
+        .animate('BirdMovingUpLeft', 0, 0, 1)
+        .animate('BirdMovingDownLeft', 0, 1, 1)
+        .animate('BirdMovingDownRight', 0, 2, 1)
+        .animate('BirdMovingUpRight', 0, 3, 1)
+        .animate('BirdShot', 0, 4, 1)
+
+
+        @bind('NewDirection', (data) ->
+            animationSpeed = 12
+
+            if data.x > 0 and data.y > 0
+                @animate 'BirdMovingDownRight', animationSpeed, 10
+            else if data.x > 0 and data.y < 0
+                @animate 'BirdMovingUpRight', animationSpeed, 10
+            else if data.x < 0 and data.y > 0
+                @animate 'BirdMovingDownLeft', animationSpeed, 10
+            else if data.x < 0 and data.y < 0
+                @animate 'BirdMovingUpLeft', animationSpeed, 10
+            else
+                @stop
+        )

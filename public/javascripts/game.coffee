@@ -25,7 +25,7 @@ Game =
 Crafty.scene 'Game', ->
     console.log 'Game'
 
-    @bird = Crafty.e('Goose').at(11, 7)
+    @bird = Crafty.e('Eagle').at(11, 7)
 
     @crosshair = Crafty.e('Crosshair').at(2, 2)
 
@@ -69,6 +69,9 @@ Crafty.scene 'Loading', ->
     
             Crafty.sprite 80, 'images/goose-animation.png',
                 spr_goose: [0, 0]
+
+            Crafty.sprite 80, 'images/eagle-animation.png',
+                spr_eagle: [0, 0]
 
             Crafty.scene 'Game'
 
