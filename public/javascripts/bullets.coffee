@@ -15,9 +15,9 @@ Crafty.c 'Bullets',
         "#{@bullets}"
 
     shoot: ->
-        @bullets -= 1
-        @text @bulletsText
-        if @bullets < 0
+        if @bullets <= 0
             Crafty.trigger("LoseRound")
         else
+            @bullets -= 1
+            @text @bulletsText
             Crafty.audio.play('shoot')
