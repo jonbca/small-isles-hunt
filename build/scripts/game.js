@@ -1,10 +1,4 @@
-require=(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({"dog":[function(require,module,exports){
-module.exports=require('ygZ2Nw');
-},{}],"ygZ2Nw":[function(require,module,exports){
-
-
-
-},{}],"game_state":[function(require,module,exports){
+require=(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({"game_state":[function(require,module,exports){
 module.exports=require('PorBjV');
 },{}],"PorBjV":[function(require,module,exports){
 var GameState;
@@ -58,7 +52,10 @@ Game = {
 };
 
 Crafty.scene('Game', function() {
-  this.bird = Crafty.e('Eagle').at(11, 7);
+  var birdType,
+    _this = this;
+  birdType = Math.random() < 0.5 ? 'Eagle' : 'Goose';
+  this.bird = Crafty.e(birdType).at(11, 7);
   this.crosshair = Crafty.e('Crosshair').at(2, 2);
   this.score = Crafty.e('Score').bind('Hit', function() {
     console.log('Hit');
@@ -78,18 +75,34 @@ Crafty.scene('Game', function() {
       return Crafty.trigger('Hit');
     }
   });
-  this.dog = Crafty.e('2D, DOM, Image').attr({
-    w: Crafty.viewport.width,
-    h: Crafty.viewport.height
-  }).bind('BirdDead', function() {
-    console.log('BirdDead');
-    return this.image('/images/dog-animation.gif');
+  this.bind('BirdDead', function() {
+    console.log("Game bird died");
+    return setTimeout(this.reset, 1000);
   });
+  this.reset = function() {
+    _this.crosshair.destroy();
+    _this.bird.destroy();
+    _this.bullets.unbind('Shoot');
+    _this.bullets.destroy();
+    _this.unbind('Shoot');
+    _this.crosshair = Crafty.e('Crosshair').at(2, 2);
+    birdType = Math.random() < 0.5 ? 'Eagle' : 'Goose';
+    _this.bird = Crafty.e(birdType).at(11, 7);
+    _this.bullets = Crafty.e('Bullets').bind('Shoot', function() {
+      console.log('Shoot');
+      return this.shoot();
+    });
+    _this.bind('Shoot', function() {
+      if (this.crosshair.intersect(this.bird)) {
+        return Crafty.trigger('Hit');
+      }
+    });
+    return Crafty.audio.play('duck_release');
+  };
   return Crafty.audio.play('theme');
 }, function() {
   this.bullets.unbind('Shoot');
   this.score.unbind('Hit');
-  this.dog.unbind('BirdDead');
   return this.unbind('KeyDown');
 });
 
@@ -105,12 +118,16 @@ Crafty.scene('Loading', function() {
     'color': 'white',
     'text-align': 'center'
   });
-  return Crafty.load(['/sounds/shot_sound_effect.mp3', '/sounds/duck_hunt_theme.mp3', '/sounds/wing_flap.mp3', '/sounds/duck_hitting_ground.mp3', '/images/dog-animation.gif', '/images/eagle-animation.png', '/images/goose-animation.png', '/images/crosshair-80x80.png'], function() {
+  return Crafty.load(['/sounds/shot_sound_effect.mp3', '/sounds/duck_hunt_theme.mp3', '/sounds/wing_flap.mp3', '/sounds/duck_hitting_ground.mp3', '/sounds/duck_release.mp3', '/images/dog-animation.gif', '/images/dog-animation-sequence.png', '/images/eagle-animation.png', '/images/goose-animation.png', '/images/crosshair-80x80.png'], function() {
     Crafty.audio.add({
       shoot: ['/sounds/shot_sound_effect.mp3'],
       theme: ['/sounds/duck_hunt_theme.mp3'],
       wing_flap: ['/sounds/wing_flap.mp3'],
-      duck_hitting_ground: ['/sounds/duck_hitting_ground.mp3']
+      duck_hitting_ground: ['/sounds/duck_hitting_ground.mp3'],
+      duck_release: ['/sounds/duck_release.mp3']
+    });
+    Crafty.sprite(160, 80, 'images/dog-animation-sequence.png', {
+      spr_dog: [0, 0]
     });
     Crafty.sprite(80, 'images/goose-animation.png', {
       spr_goose: [0, 0]
