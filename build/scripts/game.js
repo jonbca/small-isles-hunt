@@ -1,11 +1,13 @@
 require=(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({"game":[function(require,module,exports){
 module.exports=require('UKfeBT');
 },{}],"UKfeBT":[function(require,module,exports){
-(function(global){var Bird, Crafty, Game;
+(function(global){var Bird, Crafty, Crosshair, Game;
 
 Crafty = require('crafty');
 
 Bird = require('bird');
+
+Crosshair = require('crosshair');
 
 Game = {
   grid: {
@@ -21,17 +23,41 @@ Game = {
   ground_height: 6,
   start: function() {
     Crafty.init(Game.width, Game.height);
-    return Crafty.background('url(/images/dog-animation-bknd.jpg)');
+    Crafty.background('url(/images/dog-animation-bknd.jpg)');
+    return Crafty.e('Crosshair').at(2, 2);
   }
 };
 
 module.exports = Game;
 
+Crafty.c('Grid', {
+  init: function() {
+    return this.attr({
+      w: Game.grid.tile.width,
+      h: Game.grid.tile.height
+    });
+  },
+  at: function(x, y) {
+    if (x === void 0 && y === void 0) {
+      return {
+        x: this.x / Game.grid.tile.width,
+        y: this.y / Game.grid.tile.height
+      };
+    } else {
+      this.attr({
+        x: x * Game.grid.tile.width,
+        y: y * Game.grid.tile.height
+      });
+      return this;
+    }
+  }
+});
+
 global.addEventListener('load', Game.start);
 
 
 })(self)
-},{"bird":"7AfcJK","crafty":"oxNTuF"}],"bird":[function(require,module,exports){
+},{"bird":"7AfcJK","crafty":"oxNTuF","crosshair":"Mh8BV1"}],"bird":[function(require,module,exports){
 module.exports=require('7AfcJK');
 },{}],"7AfcJK":[function(require,module,exports){
 var C;
@@ -64,7 +90,60 @@ module.exports = C.c('Bird', {
 });
 
 
-},{"crafty":"oxNTuF"}],"crafty":[function(require,module,exports){
+},{"crafty":"oxNTuF"}],"crosshair":[function(require,module,exports){
+module.exports=require('Mh8BV1');
+},{}],"Mh8BV1":[function(require,module,exports){
+var Crafty;
+
+Crafty = require('crafty');
+
+module.exports = Crafty.c('Crosshair', {
+  init: function() {
+    this.requires('2D, Canvas, Grid, Color, Fourway');
+    this.color('rgb(255,0,0)');
+    this.attr({
+      w: 80,
+      h: 80
+    });
+    return this.fourway(4);
+  }
+});
+
+
+},{"crafty":"oxNTuF"}],"grid":[function(require,module,exports){
+module.exports=require('CTQPRp');
+},{}],"CTQPRp":[function(require,module,exports){
+var Crafty, Game;
+
+Crafty = require('crafty');
+
+Game = require('game');
+
+Crafty.c('Grid', {
+  init: function() {
+    return this.attr({
+      w: Game.grid.tile.width,
+      h: Game.grid.tile.height
+    });
+  },
+  at: function(x, y) {
+    if (x === void 0 && y === void 0) {
+      return {
+        x: this.x / Game.grid.tile.width,
+        y: this.y / Game.grid.tile.height
+      };
+    } else {
+      this.attr({
+        x: x * Game.grid.tile.width,
+        y: y * Game.grid.tile.height
+      });
+      return this;
+    }
+  }
+});
+
+
+},{"crafty":"oxNTuF","game":"UKfeBT"}],"crafty":[function(require,module,exports){
 module.exports=require('oxNTuF');
 },{}],"oxNTuF":[function(require,module,exports){
 (function(){/*!
