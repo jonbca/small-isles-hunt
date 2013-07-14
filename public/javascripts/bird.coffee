@@ -7,19 +7,29 @@ module.exports = C.c 'Bird',
         @multiway(4, 'UP_ARROW': -90, 'DOWN_ARROW': 90, 'RIGHT_ARROW': 0, 'LEFT_ARROW': 180)
         @attr(animation: 'BirdMovingUpLeft')
 
-animateBird = (data) ->
-    #animationSpeed = 12
-
+animateBird = (data) ->    
     C.audio.play 'wing_flap'
 
-    if data.x > 0 and data.y > 0
-        @attr 'animation': 'BirdMovingDownRight'
-    else if data.x > 0 and data.y < 0
-        @attr 'animation': 'BirdMovingUpRight'
-    else if data.x < 0 and data.y > 0
-        @attr 'animation': 'BirdMovingDownLeft'
-    else if data.x < 0 and data.y < 0
-        @attr 'animation': 'BirdMovingUpLeft'
+    if data.y > 0
+        yDirection = 'Down'
+    else
+        yDirection = 'Up'
+
+    if data.x > 0
+        xDirection = 'Right'
+    else
+        xDirection = 'Left'
+
+    @attr 'animation': "BirdMoving#{yDirection}#{xDirection}"
+
+    # if data.x > 0 and data.y > 0
+    #     @attr 'animation': 'BirdMovingDownRight'
+    # else if data.x > 0 and data.y < 0
+    #     @attr 'animation': 'BirdMovingUpRight'
+    # else if data.x < 0 and data.y > 0
+    #     @attr 'animation': 'BirdMovingDownLeft'
+    # else if data.x < 0 and data.y < 0
+    #     @attr 'animation': 'BirdMovingUpLeft'
     # else
     #     @stop    
 

@@ -164,24 +164,21 @@ module.exports = C.c('Bird', {
 });
 
 animateBird = function(data) {
+  var xDirection, yDirection;
   C.audio.play('wing_flap');
-  if (data.x > 0 && data.y > 0) {
-    return this.attr({
-      'animation': 'BirdMovingDownRight'
-    });
-  } else if (data.x > 0 && data.y < 0) {
-    return this.attr({
-      'animation': 'BirdMovingUpRight'
-    });
-  } else if (data.x < 0 && data.y > 0) {
-    return this.attr({
-      'animation': 'BirdMovingDownLeft'
-    });
-  } else if (data.x < 0 && data.y < 0) {
-    return this.attr({
-      'animation': 'BirdMovingUpLeft'
-    });
+  if (data.y > 0) {
+    yDirection = 'Down';
+  } else {
+    yDirection = 'Up';
   }
+  if (data.x > 0) {
+    xDirection = 'Right';
+  } else {
+    xDirection = 'Left';
+  }
+  return this.attr({
+    'animation': "BirdMoving" + yDirection + xDirection
+  });
 };
 
 C.c('Goose', {
