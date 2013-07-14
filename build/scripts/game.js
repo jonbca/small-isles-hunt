@@ -21,6 +21,7 @@ Game = {
   width: 960,
   height: 640,
   ground_height: 6,
+  points: 0,
   start: function() {
     Crafty.init(Game.width, Game.height);
     Crafty.background('url(/images/dog-animation-bknd.jpg)');

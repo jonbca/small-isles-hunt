@@ -16,6 +16,8 @@ Game =
 
     ground_height: 6
 
+    points: 0
+
     start: ->
         Crafty.init Game.width, Game.height
         Crafty.background 'url(/images/dog-animation-bknd.jpg)'
