@@ -25,26 +25,30 @@ Game =
 Crafty.scene 'Game', ->
     console.log 'Game'
 
-    Crafty.e('Bird').at(5, 5)
+    @bird = Crafty.e('Bird').at(11, 7)
 
-    Crafty.e('Crosshair').at(2, 2)
+    @crosshair = Crafty.e('Crosshair').at(2, 2)
 
-    Crafty.e('Score').bind('Hit', ->
+    @score = Crafty.e('Score').bind('Hit', ->
             console.log('Hit')
             @addPoints()
         )
     
-    Crafty.e('Bullets').bind('Shoot', ->
+    @bullets = Crafty.e('Bullets').bind('Shoot', ->
             console.log('Shoot')
             @shoot()
         )
 
-    Crafty.bind('KeyDown', (e) ->
+    @bind('KeyDown', (e) ->
             if e.key is Crafty.keys['SPACE']
                 Crafty.trigger('Shoot')
         )
 
     Crafty.audio.play('theme')
+, ->
+    @bullets.unbind('Shoot')
+    @score.unbind('Hit')
+    @unbind('KeyDown')
 
 Crafty.scene 'Loading', ->
     console.log 'Loading'

@@ -53,22 +53,26 @@ Game = {
 
 Crafty.scene('Game', function() {
   console.log('Game');
-  Crafty.e('Bird').at(5, 5);
-  Crafty.e('Crosshair').at(2, 2);
-  Crafty.e('Score').bind('Hit', function() {
+  this.bird = Crafty.e('Bird').at(11, 7);
+  this.crosshair = Crafty.e('Crosshair').at(2, 2);
+  this.score = Crafty.e('Score').bind('Hit', function() {
     console.log('Hit');
     return this.addPoints();
   });
-  Crafty.e('Bullets').bind('Shoot', function() {
+  this.bullets = Crafty.e('Bullets').bind('Shoot', function() {
     console.log('Shoot');
     return this.shoot();
   });
-  Crafty.bind('KeyDown', function(e) {
+  this.bind('KeyDown', function(e) {
     if (e.key === Crafty.keys['SPACE']) {
       return Crafty.trigger('Shoot');
     }
   });
   return Crafty.audio.play('theme');
+}, function() {
+  this.bullets.unbind('Shoot');
+  this.score.unbind('Hit');
+  return this.unbind('KeyDown');
 });
 
 Crafty.scene('Loading', function() {
