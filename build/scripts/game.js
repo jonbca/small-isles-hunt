@@ -52,8 +52,10 @@ Game = {
 };
 
 Crafty.scene('Game', function() {
-  console.log('Game');
-  this.bird = Crafty.e('Eagle').at(11, 7);
+  var birdType,
+    _this = this;
+  birdType = Math.random() < 0.5 ? 'Eagle' : 'Goose';
+  this.bird = Crafty.e(birdType).at(11, 7);
   this.crosshair = Crafty.e('Crosshair').at(2, 2);
   this.score = Crafty.e('Score').bind('Hit', function() {
     console.log('Hit');
@@ -68,6 +70,35 @@ Crafty.scene('Game', function() {
       return Crafty.trigger('Shoot');
     }
   });
+  this.bind('Shoot', function() {
+    if (this.crosshair.intersect(this.bird)) {
+      return Crafty.trigger('Hit');
+    }
+  });
+  this.bind('BirdDead', function() {
+    console.log("Game bird died");
+    return setTimeout(this.reset, 1000);
+  });
+  this.reset = function() {
+    _this.crosshair.destroy();
+    _this.bird.destroy();
+    _this.bullets.unbind('Shoot');
+    _this.bullets.destroy();
+    _this.unbind('Shoot');
+    _this.crosshair = Crafty.e('Crosshair').at(2, 2);
+    birdType = Math.random() < 0.5 ? 'Eagle' : 'Goose';
+    _this.bird = Crafty.e(birdType).at(11, 7);
+    _this.bullets = Crafty.e('Bullets').bind('Shoot', function() {
+      console.log('Shoot');
+      return this.shoot();
+    });
+    _this.bind('Shoot', function() {
+      if (this.crosshair.intersect(this.bird)) {
+        return Crafty.trigger('Hit');
+      }
+    });
+    return Crafty.audio.play('duck_release');
+  };
   return Crafty.audio.play('theme');
 }, function() {
   this.bullets.unbind('Shoot');
@@ -87,11 +118,16 @@ Crafty.scene('Loading', function() {
     'color': 'white',
     'text-align': 'center'
   });
-  return Crafty.load(['sounds/shot_sound_effect.mp3', 'sounds/duck_hunt_theme.mp3', 'sounds/wing_flap.mp3', 'images/dog-animation.gif', 'images/eagle-animation.png', 'images/goose-animation.png', 'images/crosshair-80x80.png'], function() {
+  return Crafty.load(['/sounds/shot_sound_effect.mp3', '/sounds/duck_hunt_theme.mp3', '/sounds/wing_flap.mp3', '/sounds/duck_hitting_ground.mp3', '/sounds/duck_release.mp3', '/images/dog-animation.gif', '/images/dog-animation-sequence.png', '/images/eagle-animation.png', '/images/goose-animation.png', '/images/crosshair-80x80.png'], function() {
     Crafty.audio.add({
-      shoot: ['sounds/shot_sound_effect.mp3'],
-      theme: ['sounds/duck_hunt_theme.mp3'],
-      wing_flap: ['sounds/wing_flap.mp3']
+      shoot: ['/sounds/shot_sound_effect.mp3'],
+      theme: ['/sounds/duck_hunt_theme.mp3'],
+      wing_flap: ['/sounds/wing_flap.mp3'],
+      duck_hitting_ground: ['/sounds/duck_hitting_ground.mp3'],
+      duck_release: ['/sounds/duck_release.mp3']
+    });
+    Crafty.sprite(160, 80, 'images/dog-animation-sequence.png', {
+      spr_dog: [0, 0]
     });
     Crafty.sprite(80, 'images/goose-animation.png', {
       spr_goose: [0, 0]
@@ -146,7 +182,7 @@ C = require('crafty');
 
 module.exports = C.c('Bird', {
   init: function() {
-    this.requires('2D, Canvas, Grid, Multiway');
+    this.requires('2D, Canvas, Grid, Multiway, Tween');
     this.attr({
       w: 80,
       h: 80
@@ -157,31 +193,47 @@ module.exports = C.c('Bird', {
       'RIGHT_ARROW': 0,
       'LEFT_ARROW': 180
     });
-    return this.attr({
+    this.attr({
       animation: 'BirdMovingUpLeft'
+    });
+    this.bind('Hit', function() {
+      this.unbind('NewDirection');
+      this.attr({
+        'animation': 'BirdShot'
+      });
+      this.animate('BirdShot', 1, 1);
+      this.tween({
+        y: 480,
+        w: 0,
+        h: 0
+      }, 60);
+      this.bind('TweenEnd', this.destroy);
+      return C.trigger('BirdDead');
+    });
+    return this.bind('BirdDead', function() {
+      return this.timeout((function() {
+        return C.audio.play('duck_hitting_ground');
+      }), 800);
     });
   }
 });
 
 animateBird = function(data) {
+  var xDirection, yDirection;
   C.audio.play('wing_flap');
-  if (data.x > 0 && data.y > 0) {
-    return this.attr({
-      'animation': 'BirdMovingDownRight'
-    });
-  } else if (data.x > 0 && data.y < 0) {
-    return this.attr({
-      'animation': 'BirdMovingUpRight'
-    });
-  } else if (data.x < 0 && data.y > 0) {
-    return this.attr({
-      'animation': 'BirdMovingDownLeft'
-    });
-  } else if (data.x < 0 && data.y < 0) {
-    return this.attr({
-      'animation': 'BirdMovingUpLeft'
-    });
+  if (data.y > 0) {
+    yDirection = 'Down';
+  } else {
+    yDirection = 'Up';
   }
+  if (data.x > 0) {
+    xDirection = 'Right';
+  } else {
+    xDirection = 'Left';
+  }
+  return this.attr({
+    'animation': "BirdMoving" + yDirection + xDirection
+  });
 };
 
 C.c('Goose', {

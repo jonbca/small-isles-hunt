@@ -3,6 +3,7 @@ Bird = require 'bird'
 Crosshair = require 'crosshair'
 Score = require 'score'
 Bullets = require 'bullets'
+
 Game =
     grid:
         width: 12
@@ -23,9 +24,8 @@ Game =
         Crafty.scene 'Loading'
 
 Crafty.scene 'Game', ->
-    console.log 'Game'
-
-    @bird = Crafty.e('Eagle').at(11, 7)
+    birdType = if Math.random() < 0.5 then 'Eagle' else 'Goose'
+    @bird = Crafty.e(birdType).at(11, 7)
 
     @crosshair = Crafty.e('Crosshair').at(2, 2)
 
@@ -44,6 +44,40 @@ Crafty.scene 'Game', ->
                 Crafty.trigger('Shoot')
         )
 
+    @bind('Shoot', ->
+            if @crosshair.intersect @bird
+                Crafty.trigger('Hit')
+        )
+
+    @bind('BirdDead', ->
+            console.log "Game bird died"
+
+            setTimeout @reset, 1000
+        )
+
+    @reset = =>
+        @crosshair.destroy()
+        @bird.destroy()
+        @bullets.unbind('Shoot')
+        @bullets.destroy()
+        @unbind('Shoot')
+
+        @crosshair = Crafty.e('Crosshair').at(2, 2)
+        
+        birdType = if Math.random() < 0.5 then 'Eagle' else 'Goose'
+        @bird = Crafty.e(birdType).at(11, 7)
+        @bullets = Crafty.e('Bullets').bind('Shoot', ->
+            console.log('Shoot')
+            @shoot()
+        )
+
+        @bind('Shoot', ->
+            if @crosshair.intersect @bird
+                Crafty.trigger('Hit')
+        )
+
+        Crafty.audio.play('duck_release')
+
     Crafty.audio.play('theme')
 , ->
     @bullets.unbind('Shoot')
@@ -58,19 +92,27 @@ Crafty.scene 'Loading', ->
         .css({ 'font-size': '24px', 'font-family': 'sans-serif', 'color': 'white', 'text-align': 'center' })
 
     Crafty.load [
-        'sounds/shot_sound_effect.mp3',
-        'sounds/duck_hunt_theme.mp3',
-        'sounds/wing_flap.mp3'
-        'images/dog-animation.gif',
-        'images/eagle-animation.png',
-        'images/goose-animation.png',
-        'images/crosshair-80x80.png'
+        '/sounds/shot_sound_effect.mp3',
+        '/sounds/duck_hunt_theme.mp3',
+        '/sounds/wing_flap.mp3',
+        '/sounds/duck_hitting_ground.mp3',
+        '/sounds/duck_release.mp3',
+        '/images/dog-animation.gif',
+        '/images/dog-animation-sequence.png',
+        '/images/eagle-animation.png',
+        '/images/goose-animation.png',
+        '/images/crosshair-80x80.png'
         ], ->
             Crafty.audio.add
-                shoot: ['sounds/shot_sound_effect.mp3'],
-                theme: ['sounds/duck_hunt_theme.mp3'],
-                wing_flap: ['sounds/wing_flap.mp3']
+                shoot: ['/sounds/shot_sound_effect.mp3'],
+                theme: ['/sounds/duck_hunt_theme.mp3'],
+                wing_flap: ['/sounds/wing_flap.mp3'],
+                duck_hitting_ground: ['/sounds/duck_hitting_ground.mp3'],
+                duck_release: ['/sounds/duck_release.mp3']
     
+            Crafty.sprite 160, 80, 'images/dog-animation-sequence.png',
+                spr_dog: [0, 0]
+
             Crafty.sprite 80, 'images/goose-animation.png',
                 spr_goose: [0, 0]
 
