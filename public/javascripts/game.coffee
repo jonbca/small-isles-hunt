@@ -1,17 +1,23 @@
 Crafty = require 'crafty'
 Bird = require 'bird'
 
-width = window.innerWidth
-height = window.innerHeight
-
 Game =
-    width: window.innerWidth
+    grid:
+        width: 12
+        height: 8
+        tile:
+            width: 80
+            height: 80
+
+    width: 960
     
-    height: window.innerHeight
+    height: 640
+
+    ground_height: 6
 
     start: ->
-        Crafty.init width, height
-        Crafty.background 'rgb(138,194,255)'
+        Crafty.init Game.width, Game.height
+        Crafty.background 'url(/images/dog-animation-bknd.jpg)'
 
 module.exports = Game
 

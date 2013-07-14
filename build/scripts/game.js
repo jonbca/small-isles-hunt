@@ -1,22 +1,27 @@
 require=(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({"game":[function(require,module,exports){
 module.exports=require('UKfeBT');
 },{}],"UKfeBT":[function(require,module,exports){
-(function(global){var Bird, Crafty, Game, height, width;
+(function(global){var Bird, Crafty, Game;
 
 Crafty = require('crafty');
 
 Bird = require('bird');
 
-width = window.innerWidth;
-
-height = window.innerHeight;
-
 Game = {
-  width: window.innerWidth,
-  height: window.innerHeight,
+  grid: {
+    width: 12,
+    height: 8,
+    tile: {
+      width: 80,
+      height: 80
+    }
+  },
+  width: 960,
+  height: 640,
+  ground_height: 6,
   start: function() {
-    Crafty.init(width, height);
-    return Crafty.background('rgb(138,194,255)');
+    Crafty.init(Game.width, Game.height);
+    return Crafty.background('url(/images/dog-animation-bknd.jpg)');
   }
 };
 
