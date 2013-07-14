@@ -53,7 +53,7 @@ Game = {
 
 Crafty.scene('Game', function() {
   console.log('Game');
-  this.bird = Crafty.e('Bird').at(11, 7);
+  this.bird = Crafty.e('Goose').at(11, 7);
   this.crosshair = Crafty.e('Crosshair').at(2, 2);
   this.score = Crafty.e('Score').bind('Hit', function() {
     console.log('Hit');
@@ -91,6 +91,9 @@ Crafty.scene('Loading', function() {
     Crafty.audio.add({
       shoot: ['sounds/shot_sound_effect.mp3'],
       theme: ['sounds/duck_hunt_theme.mp3']
+    });
+    Crafty.sprite(80, 'images/goose-animation.png', {
+      spr_goose: [0, 0]
     });
     return Crafty.scene('Game');
   });
@@ -136,8 +139,7 @@ C = require('crafty');
 
 module.exports = C.c('Bird', {
   init: function() {
-    this.requires('2D, Canvas, Grid, Color, Multiway');
-    this.color('rgb(147,224,0)');
+    this.requires('2D, Canvas, Grid, Multiway');
     this.attr({
       w: 80,
       h: 80
@@ -147,6 +149,27 @@ module.exports = C.c('Bird', {
       'DOWN_ARROW': 90,
       'RIGHT_ARROW': 0,
       'LEFT_ARROW': 180
+    });
+  }
+});
+
+C.c('Goose', {
+  init: function() {
+    this.requires('Bird, spr_goose, SpriteAnimation').animate('BirdMovingUpLeft', 0, 0, 1).animate('BirdMovingDownLeft', 0, 1, 1).animate('BirdMovingDownRight', 0, 2, 1).animate('BirdMovingUpRight', 0, 3, 1).animate('BirdShot', 0, 4, 1);
+    return this.bind('NewDirection', function(data) {
+      var animationSpeed;
+      animationSpeed = 12;
+      if (data.x > 0 && data.y > 0) {
+        return this.animate('BirdMovingDownRight', animationSpeed, 10);
+      } else if (data.x > 0 && data.y < 0) {
+        return this.animate('BirdMovingUpRight', animationSpeed, 10);
+      } else if (data.x < 0 && data.y > 0) {
+        return this.animate('BirdMovingDownLeft', animationSpeed, 10);
+      } else if (data.x < 0 && data.y < 0) {
+        return this.animate('BirdMovingUpLeft', animationSpeed, 10);
+      } else {
+        return this.stop;
+      }
     });
   }
 });

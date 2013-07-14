@@ -25,7 +25,7 @@ Game =
 Crafty.scene 'Game', ->
     console.log 'Game'
 
-    @bird = Crafty.e('Bird').at(11, 7)
+    @bird = Crafty.e('Goose').at(11, 7)
 
     @crosshair = Crafty.e('Crosshair').at(2, 2)
 
@@ -63,11 +63,14 @@ Crafty.scene 'Loading', ->
         'images/eagle-animation.png',
         'images/goose-animation.png'
         ], ->
-        Crafty.audio.add
-            shoot: ['sounds/shot_sound_effect.mp3'],
-            theme: ['sounds/duck_hunt_theme.mp3']
+            Crafty.audio.add
+                shoot: ['sounds/shot_sound_effect.mp3'],
+                theme: ['sounds/duck_hunt_theme.mp3']
     
-        Crafty.scene 'Game'
+            Crafty.sprite 80, 'images/goose-animation.png',
+                spr_goose: [0, 0]
+
+            Crafty.scene 'Game'
 
 module.exports = Game
 
