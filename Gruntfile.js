@@ -22,31 +22,12 @@ module.exports = function (grunt) {
                     }
                 ]
             }
-        },
-        copy: {
-            main: {
-                files: [
-                    {
-                        expand: true,
-                        src: ['**/*'],
-                        dest: 'build/styles',
-                        cwd: 'public/stylesheets'
-                    },
-                    {
-                        expand: true,
-                        src: ['images/**/*', 'index.html', 'sounds/**/*'],
-                        dest: 'build',
-                        cwd: 'public'
-                    }
-                ]
-            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-browserify');
 
-    grunt.registerTask('default', ['browserify', 'copy']);
+    grunt.registerTask('default', ['browserify']);
     grunt.registerTask('develop', ['default', 'watch']);
 };
