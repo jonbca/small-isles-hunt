@@ -15,6 +15,9 @@ module.exports = C.c 'Bird',
             @bind 'TweenEnd', @destroy
             C.trigger 'BirdDead'
 
+        @bind 'BirdDead', ->
+            @timeout (-> C.audio.play 'duck_hitting_ground' ), 800
+
 animateBird = (data) ->    
     C.audio.play 'wing_flap'
 

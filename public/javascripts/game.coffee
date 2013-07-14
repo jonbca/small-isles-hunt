@@ -70,16 +70,18 @@ Crafty.scene 'Loading', ->
     Crafty.load [
         '/sounds/shot_sound_effect.mp3',
         '/sounds/duck_hunt_theme.mp3',
-        '/sounds/wing_flap.mp3'
+        '/sounds/wing_flap.mp3',
+        '/sounds/duck_hitting_ground.mp3',
         '/images/dog-animation.gif',
         '/images/eagle-animation.png',
         '/images/goose-animation.png',
         '/images/crosshair-80x80.png'
         ], ->
             Crafty.audio.add
-                shoot: ['sounds/shot_sound_effect.mp3'],
-                theme: ['sounds/duck_hunt_theme.mp3'],
-                wing_flap: ['sounds/wing_flap.mp3']
+                shoot: ['/sounds/shot_sound_effect.mp3'],
+                theme: ['/sounds/duck_hunt_theme.mp3'],
+                wing_flap: ['/sounds/wing_flap.mp3'],
+                duck_hitting_ground: ['/sounds/duck_hitting_ground.mp3']
     
             Crafty.sprite 80, 'images/goose-animation.png',
                 spr_goose: [0, 0]

@@ -105,11 +105,12 @@ Crafty.scene('Loading', function() {
     'color': 'white',
     'text-align': 'center'
   });
-  return Crafty.load(['/sounds/shot_sound_effect.mp3', '/sounds/duck_hunt_theme.mp3', '/sounds/wing_flap.mp3', '/images/dog-animation.gif', '/images/eagle-animation.png', '/images/goose-animation.png', '/images/crosshair-80x80.png'], function() {
+  return Crafty.load(['/sounds/shot_sound_effect.mp3', '/sounds/duck_hunt_theme.mp3', '/sounds/wing_flap.mp3', '/sounds/duck_hitting_ground.mp3', '/images/dog-animation.gif', '/images/eagle-animation.png', '/images/goose-animation.png', '/images/crosshair-80x80.png'], function() {
     Crafty.audio.add({
-      shoot: ['sounds/shot_sound_effect.mp3'],
-      theme: ['sounds/duck_hunt_theme.mp3'],
-      wing_flap: ['sounds/wing_flap.mp3']
+      shoot: ['/sounds/shot_sound_effect.mp3'],
+      theme: ['/sounds/duck_hunt_theme.mp3'],
+      wing_flap: ['/sounds/wing_flap.mp3'],
+      duck_hitting_ground: ['/sounds/duck_hitting_ground.mp3']
     });
     Crafty.sprite(80, 'images/goose-animation.png', {
       spr_goose: [0, 0]
@@ -178,7 +179,7 @@ module.exports = C.c('Bird', {
     this.attr({
       animation: 'BirdMovingUpLeft'
     });
-    return this.bind('Hit', function() {
+    this.bind('Hit', function() {
       this.unbind('NewDirection');
       this.attr({
         'animation': 'BirdShot'
@@ -191,6 +192,11 @@ module.exports = C.c('Bird', {
       }, 60);
       this.bind('TweenEnd', this.destroy);
       return C.trigger('BirdDead');
+    });
+    return this.bind('BirdDead', function() {
+      return this.timeout((function() {
+        return C.audio.play('duck_hitting_ground');
+      }), 800);
     });
   }
 });
