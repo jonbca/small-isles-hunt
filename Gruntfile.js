@@ -34,7 +34,7 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
-                        src: ['images/**/*', 'index.html'],
+                        src: ['images/**/*', 'index.html', 'sounds/**/*'],
                         dest: 'build',
                         cwd: 'public'
                     }
