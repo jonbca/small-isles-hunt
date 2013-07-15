@@ -8,7 +8,7 @@ Crafty.c 'Bullets',
             x: 900
             y: 30
         @text @bulletsText
-        @textFont {size: '40px', weight: 'bold'}
+        @textFont {'family': "'VT323'", size: '80px', weight: 'bold'}
         @textColor '#ff0000'
 
     bulletsText: ->

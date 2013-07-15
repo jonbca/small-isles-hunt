@@ -9,7 +9,7 @@ Crafty.c 'Score',
             y: 30
         @text(@scoreText)
         @textColor('#ffffff')
-        @textFont({size: '40px', weight: 'bold'})
+        @textFont({'family': "'VT323'", size: '80px', weight: 'bold'})
 
     scoreText: ->
         "#{@points}"

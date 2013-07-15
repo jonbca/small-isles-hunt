@@ -15,10 +15,9 @@ app.configure('development', function () {
 
 // all environments
 app.set('port', process.env.PORT || 3000);
-app.use(express.favicon());
-app.use(express.logger('dev'));
+app.use(express.compress());
 app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {maxAge: 86400000}));
 app.use(express.static(path.join(__dirname, 'build')));
 
 // development only

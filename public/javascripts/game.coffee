@@ -89,7 +89,7 @@ Crafty.scene 'Loading', ->
     Crafty.e('2D, DOM, Text')
         .text('Loading...')
         .attr({ x: 0, y: Game.height/2 - 24, w: Game.width })
-        .css({ 'font-size': '24px', 'font-family': 'sans-serif', 'color': 'white', 'text-align': 'center' })
+        .css({ 'font-size': '24px', 'font-family': '"VT323",sans-serif', 'color': 'white', 'text-align': 'center' })
 
     Crafty.load [
         '/sounds/shot_sound_effect.mp3',
