@@ -9,7 +9,7 @@ module.exports = function (grunt) {
             }
         },
         browserify: {
-            'build/scripts/game.js': ['public/javascripts/game.coffee'],
+            'tmp/scripts/game.js': ['public/javascripts/game.coffee'],
             options: {
                 transform: ['coffeeify'],
                 alias: ['public/javascripts/vendor/crafty:crafty'],
@@ -22,12 +22,21 @@ module.exports = function (grunt) {
                     }
                 ]
             }
+        },
+        uglify: {
+            'build/scripts/game.js': ['tmp/scripts/game.js'],
+            options: {
+                mangle: true,
+                compress: true,
+                report: 'min'
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', ['browserify']);
+    grunt.registerTask('default', ['browserify', 'uglify']);
     grunt.registerTask('develop', ['default', 'watch']);
 };
